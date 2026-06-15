@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>くもめも｜ふわっと浮かんだ発想を、飛ばさない。</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --ink: #34495e;
+      --sub: #6f8da5;
+      --sky-1: #7ed6ff;
+      --sky-2: #c4f1ff;
+      --sky-3: #fff3d7;
+      --pink: #ff8cc6;
+      --yellow: #ffe66d;
+      --mint: #8ff5d2;
+      --blue: #5bbcff;
+      --purple: #b79cff;
+      --white: rgba(255, 255, 255, 0.86);
+      --line: rgba(255, 255, 255, 0.68);
+      --shadow: 0 18px 48px rgba(62, 133, 180, 0.20);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", "YuGothic", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 18%, rgba(255, 255, 255, .72) 0 9%, transparent 10%),
+        radial-gradient(circle at 85% 12%, rgba(255, 230, 109, .55) 0 8%, transparent 9%),
+        radial-gradient(circle at 78% 82%, rgba(255, 140, 198, .20) 0 14%, transparent 15%),
+        linear-gradient(180deg, var(--sky-1) 0%, var(--sky-2) 52%, var(--sky-3) 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.65) 0 2px, transparent 3px),
+        radial-gradient(circle, rgba(255,255,255,.45) 0 1.5px, transparent 2.5px);
+      background-size: 90px 90px, 130px 130px;
+      background-position: 20px 30px, 60px 70px;
+      opacity: .45;
+      z-index: 0;
+    }
+
+    .floating-decoration {
+      position: fixed;
+      border-radius: 999px;
+      opacity: .85;
+      filter: blur(.2px);
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 9s ease-in-out infinite;
+    }
+
+    .deco-1 {
+      width: 90px;
+      height: 90px;
+      left: 7%;
+      top: 18%;
+      background: rgba(255, 140, 198, .36);
+    }
+
+    .deco-2 {
+      width: 54px;
+      height: 54px;
+      right: 10%;
+      top: 35%;
+      background: rgba(143, 245, 210, .52);
+      animation-delay: 1.3s;
+    }
+
+    .deco-3 {
+      width: 70px;
+      height: 70px;
+      left: 16%;
+      bottom: 12%;
+      background: rgba(183, 156, 255, .36);
+      animation-delay: 2.1s;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1060px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 82px 0 38px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.56);
+      color: #397da8;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      box-shadow: 0 8px 22px rgba(73, 148, 194, .16);
+      border: 1px solid rgba(255,255,255,.72);
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(58px, 13vw, 112px);
+      letter-spacing: .10em;
+      color: #fff;
+      line-height: 1;
+      text-shadow:
+        0 7px 0 rgba(80, 172, 224, .18),
+        0 18px 44px rgba(48, 115, 158, .28);
+    }
+
+    .lead {
+      margin: 0 auto;
+      max-width: 680px;
+      color: #2f6284;
+      font-size: clamp(16px, 2.4vw, 20px);
+      font-weight: 900;
+      line-height: 1.9;
+      letter-spacing: .05em;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .pill-link {
+      text-decoration: none;
+      padding: 13px 20px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      color: #317aa6;
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(72, 147, 190, .18);
+      border: 1px solid rgba(255,255,255,.76);
+      transition: .18s ease;
+    }
+
+    .pill-link:hover {
+      transform: translateY(-3px) rotate(-1deg);
+    }
+
+    section {
+      margin: 24px auto;
+      padding: clamp(24px, 4vw, 36px);
+      border-radius: 38px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.72);
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      color: #2f7eaa;
+      font-size: 24px;
+      letter-spacing: .08em;
+    }
+
+    .concept-text {
+      margin: 0;
+      line-height: 2.1;
+      font-size: 16px;
+    }
+
+    .concept-text strong {
+      background: linear-gradient(transparent 55%, rgba(255, 230, 109, .65) 56%);
+      font-weight: 900;
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .how-card {
+      min-height: 138px;
+      padding: 20px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 10px 24px rgba(72, 147, 190, .10);
+    }
+
+    .how-card .num {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: #4f7890;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .how-card strong {
+      display: block;
+      color: #317aa6;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .how-card p {
+      margin: 0;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .post-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .post-box::after {
+      content: "☁";
+      position: absolute;
+      right: 28px;
+      top: 18px;
+      font-size: 62px;
+      color: rgba(91, 188, 255, .16);
+      transform: rotate(8deg);
+      pointer-events: none;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 170px;
+      resize: vertical;
+      padding: 22px;
+      border: 2px solid rgba(255,255,255,.92);
+      border-radius: 30px;
+      background: rgba(255,255,255,.86);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 17px;
+      line-height: 1.9;
+      outline: none;
+      box-shadow: inset 0 0 0 1px rgba(91,188,255,.16);
+      transition: .18s ease;
+    }
+
+    textarea:focus {
+      border-color: rgba(91,188,255,.72);
+      box-shadow: 0 0 0 6px rgba(91,188,255,.13);
+      transform: translateY(-1px);
+    }
+
+    textarea::placeholder {
+      color: #9ab4c4;
+    }
+
+    .post-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.7);
+      border: 1px solid rgba(255,255,255,.86);
+      color: #317aa6;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(72, 147, 190, .12);
+    }
+
+    .mini-status {
+      color: var(--sub);
+      font-size: 13px;
+    }
+
+    .preview {
+      display: none;
+      max-width: 280px;
+      width: 100%;
+      margin-top: 16px;
+      border-radius: 28px;
+      box-shadow: 0 14px 30px rgba(72, 147, 190, .20);
+      border: 6px solid rgba(255,255,255,.74);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      font-family: inherit;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+    }
+
+    .primary {
+      flex: 2;
+      min-width: 190px;
+      padding: 16px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--blue));
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      box-shadow: 0 14px 28px rgba(255, 140, 198, .22), 0 14px 28px rgba(91,188,255,.22);
+    }
+
+    .secondary {
+      flex: 1;
+      min-width: 150px;
+      padding: 15px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.68);
+      color: #317aa6;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.86);
+    }
+
+    .danger {
+      color: #bc6a7f;
+    }
+
+    .note {
+      margin: 14px 0 0;
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .archive-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .count {
+      padding: 9px 15px;
+      border-radius: 999px;
+      background: rgba(255,230,109,.55);
+      color: #47758e;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(255,230,109,.22);
+    }
+
+    .sky {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 70px 34px;
+      padding: 42px 0 18px;
+    }
+
+    .cloud {
+      width: 310px;
+      min-height: 154px;
+      padding: 38px 26px 24px;
+      background: rgba(255,255,255,.96);
+      border-radius: 64px;
+      box-shadow: 0 18px 38px rgba(48, 115, 158, .18);
+      position: relative;
+      animation: float 5.8s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .cloud:nth-child(2n) {
+      animation-delay: .8s;
+    }
+
+    .cloud:nth-child(3n) {
+      animation-delay: 1.6s;
+    }
+
+    .cloud:nth-child(4n) {
+      animation-delay: 2.3s;
+    }
+
+    .cloud::before,
+    .cloud::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,.96);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .cloud::before {
+      width: 94px;
+      height: 94px;
+      top: -38px;
+      left: 38px;
+    }
+
+    .cloud::after {
+      width: 124px;
+      height: 124px;
+      top: -59px;
+      right: 28px;
+    }
+
+    .cloud-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .memo-date {
+      display: inline-flex;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      background: rgba(196,241,255,.55);
+      color: #5f94b0;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .memo-text {
+      margin: 0;
+      white-space: pre-wrap;
+      color: #36586b;
+      line-height: 1.85;
+      font-size: 15.8px;
+    }
+
+    .memo-image {
+      display: block;
+      width: 100%;
+      margin: 14px 0 4px;
+      border-radius: 24px;
+      box-shadow: 0 10px 22px rgba(48, 115, 158, .14);
+    }
+
+    .memo-tools {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .tiny-delete {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 140, 198, .14);
+      color: #b55d85;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .empty {
+      width: 100%;
+      text-align: center;
+      color: var(--sub);
+      line-height: 2;
+      padding: 34px 10px;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 36px 20px 54px;
+      text-align: center;
+      color: #6b8fa3;
+      font-size: 13px;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        translate: 0 0;
+        rotate: 0deg;
+      }
+      50% {
+        translate: 0 -13px;
+        rotate: .6deg;
+      }
+    }
+
+    @keyframes drift {
+      0%, 100% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 14px -18px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      header {
+        padding-top: 66px;
+      }
+
+      .how-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cloud {
+        width: min(320px, 88vw);
+      }
+
+      .lead {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="floating-decoration deco-1"></div>
+  <div class="floating-decoration deco-2"></div>
+  <div class="floating-decoration deco-3"></div>
+
+  <div class="wrap">
+    <header>
+      <div class="badge">idea playground</div>
+      <h1>くもめも</h1>
+      <p class="lead">
+        ふわっと浮かんだ発想を、<br />
+        消えてしまう前に空へ置いておく。
+      </p>
+      <div class="hero-actions">
+        <a class="pill-link" href="#post">書いてみる</a>
+        <a class="pill-link" href="#archive">過去のくもめもを見る</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="concept">
+        <h2>くもめものこと</h2>
+        <p class="concept-text">
+          発想って、<strong>雲みたい</strong>だと思う。<br />
+          ふわっと浮かんだのに、少し時間が経つと形を変えて、いつの間にかどこかへ流れていく。<br /><br />
+          「なんでだろう」「ちょっと面白いな」「あれ、何かに似ているかも」。<br />
+          くもめもは、日常の中で生まれる小さなひっかかりや気づきを、
+          消えてしまう前にそっと浮かべておく場所です。
+        </p>
+      </section>
+
+      <section class="howto">
+        <h2>使い方</h2>
+        <div class="how-grid">
+          <div class="how-card">
+            <span class="num">1</span>
+            <strong>発想する</strong>
+            <p>日常の中の「なんで？」「なんか好き」を拾う。</p>
+          </div>
+          <div class="how-card">
+            <span class="num">2</span>
+            <strong>ふわっと残す</strong>
+            <p>分類しなくていい。文章でも、写真でも、ひとことでも。</p>
+          </div>
+          <div class="how-card">
+            <span class="num">3</span>
+            <strong>あとで眺める</strong>
+            <p>過去の発想と、思いがけないタイミングで再会する。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="post-box" id="post">
+        <h2>空に飛ばす</h2>
+        <textarea id="memoText" placeholder="例：今日の夢は？"></textarea>
+
+        <div class="post-row">
+          <label class="file-label" for="memoImage">☁ 画像をえらぶ</label>
+          <input id="memoImage" type="file" accept="image/*" />
+          <span class="mini-status" id="imageStatus">画像はあっても、なくても。</span>
+        </div>
+
+        <img id="preview" class="preview" alt="選択した画像のプレビュー" />
+
+        <div class="buttons">
+          <button class="primary" type="button" onclick="addMemo()">ふわっと飛ばす</button>
+          <button class="secondary" type="button" onclick="clearForm()">入力を消す</button>
+        </div>
+
+        <p class="note">
+          投稿はこのブラウザ内に保存されます。ページを閉じても残りますが、別の端末や別のブラウザには共有されません。
+        </p>
+      </section>
+
+      <section class="archive" id="archive">
+        <div class="archive-head">
+          <div>
+            <h2>過去のくもめも</h2>
+            <p class="note">新しいものほど上に浮かびます。日時も一緒に残ります。</p>
+          </div>
+          <span class="count" id="memoCount">0 clouds</span>
+        </div>
+
+        <div class="buttons">
+          <button class="secondary" type="button" onclick="downloadArchive()">テキストで書き出す</button>
+          <button class="secondary danger" type="button" onclick="clearAllMemos()">すべて消す</button>
+        </div>
+
+        <div class="sky" id="sky"></div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    © 2026 kumomemo
+  </footer>
+
+  <script>
+    const STORAGE_KEY = "kumomemo.pop.archive.v1";
+    let selectedImageData = "";
+
+    const sampleMemos = [
+      {
+        text: "くもりの方が紫外線強いらしい",
+        image: "",
+        createdAt: "sample"
+      },
+      {
+        text: "くもってよく考えると塵の塊なんだよな",
+        image: "",
+        createdAt: "sample"
+      }
+    ];
+
+    const memoText = document.getElementById("memoText");
+    const memoImage = document.getElementById("memoImage");
+    const preview = document.getElementById("preview");
+    const imageStatus = document.getElementById("imageStatus");
+
+    memoImage.addEventListener("change", function () {
+      const file = memoImage.files[0];
+
+      if (!file) {
+        selectedImageData = "";
+        preview.style.display = "none";
+        imageStatus.textContent = "画像はあっても、なくても。";
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        alert("画像ファイルを選んでください。");
+        memoImage.value = "";
+        return;
+      }
+
+      if (file.size > 1800000) {
+        alert("画像が少し大きいかも。軽めの画像を選ぶと保存しやすいです。");
+        memoImage.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        selectedImageData = event.target.result;
+        preview.src = selectedImageData;
+        preview.style.display = "block";
+        imageStatus.textContent = "画像を選択しました。";
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function getMemos() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleMemos));
+        return sampleMemos;
+      }
+      return JSON.parse(saved);
+    }
+
+    function saveMemos(memos) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(memos));
+    }
+
+    function addMemo() {
+      const text = memoText.value.trim();
+
+      if (!text && !selectedImageData) {
+        alert("文字か画像のどちらかを残してね。");
+        return;
+      }
+
+      const memo = {
+        text,
+        image: selectedImageData,
+        createdAt: formatDate(new Date())
+      };
+
+      const memos = getMemos();
+      memos.push(memo);
+      saveMemos(memos);
+
+      clearForm();
+      renderMemos();
+
+      document.getElementById("archive").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function clearForm() {
+      memoText.value = "";
+      memoImage.value = "";
+      selectedImageData = "";
+      preview.src = "";
+      preview.style.display = "none";
+      imageStatus.textContent = "画像はあっても、なくても。";
+    }
+
+    function deleteMemo(indexFromNewest) {
+      const memos = getMemos();
+      const actualIndex = memos.length - 1 - indexFromNewest;
+
+      if (confirm("このくもめもを消しますか？")) {
+        memos.splice(actualIndex, 1);
+        saveMemos(memos);
+        renderMemos();
+      }
+    }
+
+    function clearAllMemos() {
+      if (confirm("すべてのくもめもを消しますか？")) {
+        saveMemos([]);
+        renderMemos();
+      }
+    }
+
+    function renderMemos() {
+      const sky = document.getElementById("sky");
+      const memoCount = document.getElementById("memoCount");
+      const memos = getMemos();
+      const newest = [...memos].reverse();
+
+      memoCount.textContent = `${memos.length} clouds`;
+      sky.innerHTML = "";
+
+      if (memos.length === 0) {
+        sky.innerHTML = `<div class="empty">まだ雲はありません。<br>最初のくもめもを、ふわっと飛ばしてみてください。</div>`;
+        return;
+      }
+
+      newest.forEach((memo, index) => {
+        const cloud = document.createElement("article");
+        cloud.className = "cloud";
+
+        const imageHtml = memo.image
+          ? `<img class="memo-image" src="${memo.image}" alt="くもめも画像">`
+          : "";
+
+        const textHtml = memo.text
+          ? `<p class="memo-text">${escapeHtml(memo.text)}</p>`
+          : `<p class="memo-text">画像だけのくもめも</p>`;
+
+        cloud.innerHTML = `
+          <div class="cloud-inner">
+            <div class="memo-date">${escapeHtml(memo.createdAt)}</div>
+            ${textHtml}
+            ${imageHtml}
+            <div class="memo-tools">
+              <button class="tiny-delete" type="button" onclick="deleteMemo(${index})">消す</button>
+            </div>
+          </div>
+        `;
+
+        sky.appendChild(cloud);
+      });
+    }
+
+    function downloadArchive() {
+      const memos = getMemos();
+
+      if (memos.length === 0) {
+        alert("書き出すくもめもがありません。");
+        return;
+      }
+
+      const text = memos.map((memo, index) => {
+        return `くもめも ${String(index + 1).padStart(3, "0")}\\n日時：${memo.createdAt}\\n内容：${memo.text || "画像だけのくもめも"}\\n画像：${memo.image ? "あり" : "なし"}`;
+      }).join("\\n\\n--------------------\\n\\n");
+
+      const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "kumomemo_archive.txt";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const h = String(date.getHours()).padStart(2, "0");
+      const min = String(date.getMinutes()).padStart(2, "0");
+      return `${y}.${m}.${d} ${h}:${min}`;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    renderMemos();
+  </script>
+</body>
+</html>
